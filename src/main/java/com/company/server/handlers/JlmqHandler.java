@@ -7,6 +7,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import javax.websocket.server.ServerEndpoint;
+
 @Component
 @AllArgsConstructor
 public class JlmqHandler extends TextWebSocketHandler {
