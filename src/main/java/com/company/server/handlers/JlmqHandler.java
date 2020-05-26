@@ -47,12 +47,10 @@ public class JlmqHandler extends TextWebSocketHandler {
         }
 
         switch (getString(root, "command")) {
-            // producer sends message
             case "send":
                 JsonNode body = root.get("body");
 
                 if (body == null) {
-                    // missing body is equivalent to empty body
                     body = mapper.getNodeFactory().objectNode();
                 } else if (body.getNodeType() != OBJECT) {
                     throw new BadDataException();
@@ -61,28 +59,23 @@ public class JlmqHandler extends TextWebSocketHandler {
                 messagesService.send((ObjectNode) body, getString(root, "queue"));
                 break;
 
-            // consumer subscribes to a queue
             case "subscribe":
                 subscriptionService.subscribe(session, getString(root, "queue"));
                 messagesService.checkMessagesFor(session);
                 break;
 
-            // consumer acknowledges received message
             case "acknowledge":
                 messagesService.acknowledge(session, Long.parseLong(getString(root, "message")));
                 break;
 
-            // consumer can't process message because it's malformed
             case "malformed":
                 messagesService.malformed(session, Long.parseLong(getString(root, "message")));
                 break;
 
-            // consumer has completed processing message
             case "completed":
                 messagesService.completed(session, Long.parseLong(getString(root, "message")));
                 break;
 
-            // client error - unrecognized command
             default: throw new BadDataException();
         }
     }
