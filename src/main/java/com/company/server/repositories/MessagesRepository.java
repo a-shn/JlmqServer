@@ -56,7 +56,7 @@ public class MessagesRepository {
         if (updRows == 0) {
             throw new IllegalArgumentException();
         }
-        message.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+        message.setId(Long.parseLong(String.valueOf(keyHolder.getKeyList().get(0).get("id"))));
         return message;
     }
 
